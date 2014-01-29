@@ -5,6 +5,7 @@ import com.pivotallabs.lunchtime.model.Person;
 import com.pivotallabs.lunchtime.repository.PersonRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -27,7 +28,10 @@ public class PersonController {
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST, params = "email")
-    public String create(String email) {
+    public String create(String email) throws MissingServletRequestParameterException {
+        if (email == null || email.equals("")) {
+            throw new MissingServletRequestParameterException("email", "string");
+        }
         Person person = new Person(email);
         personRepository.save(person);
         return "index";
