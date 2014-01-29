@@ -1,26 +1,35 @@
 package com.pivotallabs.lunchtime.controller;
 
 
+import com.pivotallabs.lunchtime.model.Person;
+import com.pivotallabs.lunchtime.repository.PersonRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.View;
-import org.thymeleaf.spring4.view.ThymeleafView;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.inject.Inject;
+
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
+@RequestMapping(value = "/person")
 public class PersonController {
 
+    @Inject PersonRepository personRepository;
 
-    @RequestMapping(value = "/person", method = GET)
+    @RequestMapping(method = GET)
     public String index(Model model) {
         return "index";
     }
 
-//    public String create() {
-//
-//    }
+    @ResponseStatus(CREATED)
+    @RequestMapping(method = POST, params = "email")
+    public String create(String email) {
+        Person person = new Person(email);
+        personRepository.save(person);
+        return "index";
+    }
 }
