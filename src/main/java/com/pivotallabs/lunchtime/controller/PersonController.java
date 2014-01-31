@@ -29,8 +29,8 @@ public class PersonController {
     }
 
     @RequestMapping("/{personId}")
-    public String view(@PathVariable("personId") String personId, Model model) {
-        model.addAttribute("person", personRepository.findOne(Long.valueOf(personId)));
+    public String view(@PathVariable("personId") Long personId, Model model) {
+        model.addAttribute("person", personRepository.findOne(personId));
         return "person/show";
     }
 

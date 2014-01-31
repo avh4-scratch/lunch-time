@@ -20,13 +20,6 @@ public class Person {
     @Basic
     String email;
 
-    public Person() {
-    }
-
-    public Person(String id) {
-        this.id = Long.valueOf(id);
-    }
-
     public Long getId() {
         return id;
     }
