@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
 <body>
-<form method="post">
-    <input name="email"/>
-    <input type="submit" value="Add person"/>
+
+<ul class="errors">
+    <li th:each="err : ${errors}" th:text="${err.defaultMessage}"/>
+</ul>
+
+<form method="post" th:action="@{/person}" th:object="${person}">
+    <label for="email">Email: </label>
+    <input th:field="*{email}"/>
+    <button type="submit">Add person</button>
 </form>
+
+<ul>
+    <li th:each="person : ${people}"><b th:text="${person.id}"></b> <i th:text="${person.email}"></i></li>
+</ul>
+
 </body>
 </html>

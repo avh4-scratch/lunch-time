@@ -1,53 +1,50 @@
 package com.pivotallabs.lunchtime.controller;
 
-import com.pivotallabs.lunchtime.model.Person;
-import com.pivotallabs.lunchtime.repository.PersonRepository;
-import org.junit.Before;
+import com.pivotallabs.lunchtime.integration.ControllerTestBase;
 import org.junit.Test;
-import org.mockito.*;
-import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class PersonControllerTest {
-    @InjectMocks private PersonController subject;
+@Transactional
+public class PersonControllerTest extends ControllerTestBase {
 
-    @Mock private PersonRepository personRepository;
-
-    @Captor private ArgumentCaptor<Person> person;
-
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+    @Test
+    public void personIndex_shouldHaveFormToAddAPerson() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/person"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.xpath("//form[@method='post']").exists())
+                .andExpect(MockMvcResultMatchers.xpath("//form/input[@name='email']").exists())
+                .andExpect(MockMvcResultMatchers.xpath("//form/button[@type='submit']").string("Add person"));
     }
 
     @Test
-    public void create_shouldSaveNewPerson() throws Exception {
-        subject.create("darth@darkside.org");
-        verify(personRepository).save(person.capture());
-        assertThat(person.getValue().getEmail()).isEqualTo("darth@darkside.org");
+    public void personCreate_shouldAddPeople() throws Exception {
+        mockMvc.perform(post("/person")
+                .param("email", "darth@darkside.org"))
+                .andExpect(redirectedUrl("/person"));
+
+        assertThat(countRowsInTable("PERSON", "email='darth@darkside.org' AND id != 0")).isEqualTo(1);
     }
 
     @Test
-    public void create_withNoEmail_shouldReturnBadRequest() throws Exception {
-        try {
-            subject.create(null);
-            fail("Expected MissingServletRequestParameterException");
-        } catch (MissingServletRequestParameterException e) {
-        }
-        verifyZeroInteractions(personRepository);
+    public void personCreate_withEmptyEmail_shouldFail() throws Exception {
+        mockMvc.perform(post("/person").param("email", ""))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void create_withEmptyEmail_shouldReturnBadRequest() throws Exception {
-        try {
-            subject.create("");
-            fail("Expected MissingServletRequestParameterException");
-        } catch (MissingServletRequestParameterException e) {
-        }
-        verifyZeroInteractions(personRepository);
+    public void personCreate_withNullEmail_shouldFail() throws Exception {
+        mockMvc.perform(post("/person"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(xpath("//ul[@class='errors']/li[text()='may not be empty']").exists());
+
+        assertThat(countRowsInTable("PERSON")).isEqualTo(0);
     }
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<ul>
+    <li th:each="err : ${errors}" th:text="${err.defaultMessage}"/>
+</ul>
+
+<!--ID: <div  th:text="${person.id}" />-->
+EMAIL:
+<div th:text="${person.email}"/>
+<hr/>
+
+</body>
+</html>

@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @SpringApplicationConfiguration(classes = Application.class)
-public class IntegrationTestBase {
+public class ControllerTestBase {
     protected MockMvc mockMvc;
     @Inject protected JdbcTemplate jdbcTemplate;
     @Inject private WebApplicationContext wac;
