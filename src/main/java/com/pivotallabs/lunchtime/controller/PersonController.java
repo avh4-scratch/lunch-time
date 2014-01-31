@@ -6,7 +6,6 @@ import com.pivotallabs.lunchtime.repository.PersonRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,17 +21,21 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping(value = "/person")
 public class PersonController {
 
-    @Inject PersonRepository personRepository;
+    private final PersonRepository personRepository;
 
-    @RequestMapping("/{person}")
-    public String view(@PathVariable Person person, Model model) {
-        person = personRepository.findOne(person.getId());
-        model.addAttribute("person", person);
+    @Inject
+    public PersonController(PersonRepository personRepository) {
+        this.personRepository = personRepository;
+    }
+
+    @RequestMapping("/{personId}")
+    public String view(@PathVariable("personId") String personId, Model model) {
+        model.addAttribute("person", personRepository.findOne(Long.valueOf(personId)));
         return "person/show";
     }
 
     @RequestMapping(method = GET)
-    public String index(@ModelAttribute("person") Person person, Model model) {
+    public String index(Person person, Model model) {
         model.addAttribute("people", personRepository.findAll());
         model.addAttribute("person", (person == null) ? new Person() : person);
         return "index";
@@ -40,9 +43,9 @@ public class PersonController {
 
     @ResponseStatus(BAD_REQUEST)
     @RequestMapping(method = POST)
-    public String create(@Valid Person person, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("errors", bindingResult.getAllErrors());
+    public String create(@Valid Person person, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result.getAllErrors());
             return index(person, model);
         } else {
             personRepository.save(person);
