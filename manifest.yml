@@ -1,0 +1,8 @@
+---
+applications:
+- name: Lunch Time
+  memory: 256M
+  instances: 1
+  host: lunch-time
+  domain: cfapps.io
+  path: target/lunch-time.jar
