@@ -1,6 +1,6 @@
 package com.pivotallabs.lunchtime.controller;
 
-import com.pivotallabs.lunchtime.integration.ControllerTestBase;
+import com.pivotallabs.lunchtime.test.support.ControllerTestBase;
 import org.junit.Test;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Transactional
@@ -47,7 +46,6 @@ public class PersonControllerTest extends ControllerTestBase {
     @Test
     public void personCreate_withNullEmail_shouldFail() throws Exception {
         mockMvc.perform(post("/person"))
-                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(xpath("//ul[@class='errors']/li[text()='may not be empty']").exists());
 

@@ -1,0 +1,10 @@
+---
+spring:
+  profiles: dev
+  jpa.hibernate.ddl-auto: none
+  thymeleaf.cache: false
+
+---
+spring:
+  profiles: cloud
+  jpa.hibernate.ddl-auto: none

@@ -1,4 +1,4 @@
-package com.pivotallabs.lunchtime.integration;
+package com.pivotallabs.lunchtime.test.support;
 
 import com.pivotallabs.lunchtime.Application;
 import org.junit.Before;
