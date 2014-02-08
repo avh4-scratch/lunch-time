@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lunch Time</title>
+    <script src="webjars/angularjs/1.2.11/angular.js"></script>
+    <script src="js/ng/CreatePersonController.js"></script>
+</head>
+<body ng-app="LunchTime">
+
+<form ng-controller="CreatePersonController" ng-submit="processForm()">
+    <input ng-model="formData.email"/>
+    <button type="submit">Join</button>
+
+    <hr/>
+    Debugging:
+    <pre>{{ formData }}</pre>
+</form>
+
+</body>
+</html>
