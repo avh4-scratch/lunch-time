@@ -1,10 +1,13 @@
 ---
 spring:
   profiles: dev
-  jpa.hibernate.ddl-auto: none
-  thymeleaf.cache: false
+  jpa.hibernate.ddl-auto: validate
 
 ---
 spring:
   profiles: cloud
-  jpa.hibernate.ddl-auto: none
+
+---
+spring:
+  profiles: integration_test
+  jpa.hibernate.ddl-auto: validate

@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JS Tests" pattern="file:src/test/js//*" />
+</component>

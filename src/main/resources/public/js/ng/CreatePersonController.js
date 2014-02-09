@@ -1,9 +1,15 @@
-var phonecatApp = angular.module('LunchTime', []);
+'use strict';
 
-phonecatApp.controller('CreatePersonController', function ($scope) {
+var app = angular.module('LunchTime', []);
+
+app.controller('CreatePersonController', ['$scope', '$http', function ($scope, $http) {
   $scope.formData = {};
   $scope.processForm = function() {
-  console.log($scope.formData);
-  $scope.formData.email = "";
+    $scope.submitting = true;
+    $http.post('person', $scope.formData)
+    .success(function () {
+        $scope.formData.email = "";
+        $scope.submitting = false;
+    });
   };
-});
+}]);

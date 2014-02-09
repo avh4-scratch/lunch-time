@@ -3,17 +3,12 @@ package com.pivotallabs.lunchtime.controller;
 
 import com.pivotallabs.lunchtime.model.Person;
 import com.pivotallabs.lunchtime.repository.PersonRepository;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -41,7 +36,7 @@ public class PersonController {
 
     @ResponseStatus(CREATED)
     @RequestMapping(method = POST)
-    public Person create(@Valid Person person) {
+    public Person create(@RequestBody @Valid Person person) {
         return personRepository.save(person);
     }
 }

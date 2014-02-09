@@ -2,6 +2,7 @@ package com.pivotallabs.lunchtime.test.support;
 
 import com.pivotallabs.lunchtime.Application;
 import org.fluentlenium.adapter.FluentTest;
+import org.fluentlenium.adapter.util.SharedDriver;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+@SharedDriver(type = SharedDriver.SharedType.ONCE)
 public abstract class IntegrationTestBase extends FluentTest {
     private static ConfigurableApplicationContext context;
 

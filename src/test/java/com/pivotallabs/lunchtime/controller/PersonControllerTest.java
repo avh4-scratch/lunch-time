@@ -2,6 +2,8 @@ package com.pivotallabs.lunchtime.controller;
 
 import com.pivotallabs.lunchtime.test.support.ControllerTestBase;
 import org.junit.Test;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,8 +18,7 @@ public class PersonControllerTest extends ControllerTestBase {
 
     @Test
     public void create_shouldAddPeople() throws Exception {
-        mockMvc.perform(post("/person")
-                .param("email", "darth@darkside.org"))
+        createPerson("darth@darkside.org")
                 .andExpect(status().isCreated());
 
         assertThat(countRowsInTable("PERSON", "email='darth@darkside.org' AND id != 0")).isEqualTo(1);
@@ -30,7 +31,7 @@ public class PersonControllerTest extends ControllerTestBase {
 
     @Test
     public void show_shouldShowTheEmailForTheUser() throws Exception {
-        mockMvc.perform(post("/person").param("email", "darth@darkside.org"));
+        createPerson("darth@darkside.org");
         mockMvc.perform(get("/person/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("darth@darkside.org"));
@@ -38,12 +39,19 @@ public class PersonControllerTest extends ControllerTestBase {
 
     @Test
     public void create_withNullEmail_shouldFail() throws Exception {
-        mockMvc.perform(post("/person"))
-                .andDo(print())
+        mockMvc.perform(post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
                 .andExpect(status().isBadRequest())
 //                .andExpect(jsonPath("$.messages.email[0]").value("may not be empty"))
         ;
 
         assertThat(countRowsInTable("PERSON")).isEqualTo(0);
+    }
+
+    private ResultActions createPerson(String email) throws Exception {
+        return mockMvc.perform(post("/person")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"email\":\"" + email + "\"}"));
     }
 }
