@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 @ComponentScan
 @EnableAutoConfiguration
 @EnableJpaRepositories
-//@EnableScheduling // TODO get this to work
+@EnableScheduling
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

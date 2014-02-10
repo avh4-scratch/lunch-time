@@ -22,13 +22,12 @@ public class MatchingService {
         this.matcher = matcher;
     }
 
-//    @Scheduled(cron = "*/5 * * * * ?")
-    @Scheduled(fixedRate = 50000)
+    @Scheduled(cron = "*/5 * * * * ?")
     public void test() {
         System.out.println("TEST!! " + new Date());
     }
 
-    @Scheduled(cron = "0 30 11 ? * MON-FRI *")
+    @Scheduled(cron = "0 30 11 ? * MON-FRI")
     public void makeMatches() {
         Match match = matcher.getMatch();
         if (match != null) {
